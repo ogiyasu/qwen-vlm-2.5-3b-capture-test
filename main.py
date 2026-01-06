@@ -9,7 +9,7 @@ def main():
     parser = argparse.ArgumentParser(description="Semantic Camera VLM")
     parser.add_argument("--interval", type=int, default=10, help="Interval in seconds between captures")
     parser.add_argument("--output_dir", type=str, default="captures", help="Directory to save captured images")
-    parser.add_argument("--model", type=str, default="qwen2.5vl:3b", help="Model ID to use (Ollama)")
+    parser.add_argument("--model", type=str, default="llava-phi3:3.8b", help="Model ID to use (Ollama)")
     parser.add_argument("--device", type=str, default=None, help="Device to run model on (cpu, cuda, mps)")
     
     args = parser.parse_args()
@@ -41,6 +41,7 @@ def main():
                 # Analyze
                 print("Analyzing image...")
                 description = analyzer.analyze(filepath)
+                print(f"Analysis Result:\n{description}")
                 # Post
                 post_content(description, filepath)
             else:

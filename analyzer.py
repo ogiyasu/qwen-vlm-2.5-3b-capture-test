@@ -2,7 +2,7 @@ import ollama
 import os
 
 class ImageAnalyzer:
-    def __init__(self, model_id="qwen2.5-vl", device=None):
+    def __init__(self, model_id="llava-phi3:3.8b", device=None):
         self.model_id = model_id
         # device is ignored for ollama client, but kept for compatibility
         print(f"Initialized Ollama analyzer with model: {self.model_id}")
@@ -19,7 +19,10 @@ class ImageAnalyzer:
                     'role': 'user',
                     'content': prompt,
                     'images': [image_path]
-                }]
+                }],
+                options={
+                    'num_ctx': 1024  # Further reduce context to 1024 for speed/stability
+                }
             )
             return response['message']['content']
             
@@ -29,4 +32,11 @@ class ImageAnalyzer:
 if __name__ == "__main__":
     # Test
     analyzer = ImageAnalyzer()
-    print("Analyzer ready. Run 'ollama pull qwen2.5-vl' first.")
+    test_image = "test_capture.jpg"
+    if os.path.exists(test_image):
+        print(f"Testing analysis on {test_image}...")
+        result = analyzer.analyze(test_image)
+        print("Analysis Result:")
+        print(result)
+    else:
+        print(f"Analyzer ready. Run 'ollama pull {analyzer.model_id}' first. No {test_image} found to test.")
