@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Mac
+.DS_Store
+
+# Project Specific
+captures/
+posts_log.jsonl
+ollama.log
+test_capture.jpg
+test_image.jpg
