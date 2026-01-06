@@ -7,7 +7,7 @@ from poster import post_content
 
 def main():
     parser = argparse.ArgumentParser(description="Semantic Camera VLM")
-    parser.add_argument("--interval", type=int, default=30, help="Interval in seconds between captures")
+    parser.add_argument("--interval", type=int, default=10, help="Interval in seconds between captures")
     parser.add_argument("--output_dir", type=str, default="captures", help="Directory to save captured images")
     parser.add_argument("--model", type=str, default="qwen2.5vl:3b", help="Model ID to use (Ollama)")
     parser.add_argument("--device", type=str, default=None, help="Device to run model on (cpu, cuda, mps)")

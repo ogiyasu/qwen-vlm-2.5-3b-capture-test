@@ -1,30 +1,76 @@
 import json
+import os
+import requests
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 def post_content(text, image_path=None):
     """
-    Mock function to 'post' the content.
-    For now, it prints the content to the console and logs to a file.
+    Posts the content to the configured API.
+    Also logs to file for debugging.
     """
     timestamp = datetime.now().isoformat()
+    api_uri = os.getenv("API_URI")
     
-    output = {
-        "timestamp": timestamp,
-        "image_path": image_path,
-        "content": text
+    # Prepare payload matching the requested format
+    # input = { 
+    #   englishText: '...',
+    #   occured_at: new Date().toISOString()
+    # };
+    payload = {
+        "inputData": {
+            "englishText": text,
+            "occured_at": timestamp
+        }
     }
     
-    # Print to console (User Interface)
-    print("\n" + "="*30)
-    print(f"FAILED TO POST (Mock implementation):")
-    print(f"Time: {timestamp}")
-    print(f"Image: {image_path}")
-    print(f"Analysis: {text}")
-    print("="*30 + "\n")
+    log_entry = {
+        "timestamp": timestamp,
+        "image_path": image_path,
+        "content": text,
+        "api_uri": api_uri,
+        "status": "PENDING"
+    }
+
+    print(f"\nPosting to API: {api_uri}")
     
+    try:
+        if not api_uri:
+             raise ValueError("API_URI not found in .env")
+
+        response = requests.post(
+            api_uri,
+            headers={'Content-Type': 'application/json'},
+            json=payload,
+            timeout=10
+        )
+        
+        if response.ok:
+            print("API Post Success!")
+            try:
+                print("Response:", json.dumps(response.json(), indent=2))
+            except:
+                print("Response:", response.text)
+            log_entry["status"] = "SUCCESS"
+            log_entry["response"] = response.text
+        else:
+            print(f"API Error: {response.status_code} {response.reason}")
+            print(response.text)
+            log_entry["status"] = "FAILED"
+            log_entry["error"] = f"{response.status_code} {response.reason} - {response.text}"
+
+    except Exception as e:
+        print(f"Post Failed: {e}")
+        log_entry["status"] = "ERROR"
+        log_entry["error"] = str(e)
+
     # Log to file
     with open("posts_log.jsonl", "a") as f:
-        f.write(json.dumps(output) + "\n")
+        f.write(json.dumps(log_entry) + "\n")
 
 if __name__ == "__main__":
-    post_content("This is a test analysis.", "test.jpg")
+    # Test
+    post_content("This is a test analysis from semantic-camera-vlm.")

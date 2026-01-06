@@ -1,3 +1,5 @@
 opencv-python
 ollama
 pillow
+requests
+python-dotenv
