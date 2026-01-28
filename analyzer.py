@@ -7,7 +7,7 @@ class ImageAnalyzer:
         # device is ignored for ollama client, but kept for compatibility
         print(f"Initialized Ollama analyzer with model: {self.model_id}")
         
-    def analyze(self, image_path, prompt="Describe the people in the image. Focus on: sex, age, hairstyle, facial expression, action, what they are holding, and clothing. Be concrete and avoid guesses. Output in 5 bullet points: Expression / Action / Holding / Clothing / Person traits (gender / age range / hairstyle):"):
+    def analyze(self, image_path, prompt="Analyze this image objectively and strictly describe only what is clearly visible. Do not make assumptions, guesses, or hallucinations. If details are not clear, do not invent them.\n\nPlease output the description in the following fixed format:\n\n**1. Environment**\n- (Describe the surroundings, lighting, and location type briefly.)\n\n**2. Objects**\n- (List the main visible inanimate objects.)\n\n**3. People**\n(For each person visible, provide the following details. If no person is visible, state \"No people visible\".)\n- **Traits**: (Gender, Apparent Age Range, Hair Color)\n- **Appearance**: (Clothing Color/Type, Accessories/Glasses/Hat)\n- **Action/State**: (What they are doing, Body posture, Facial expression)\n\nKeep the descriptions concise and factual."):
         if not os.path.exists(image_path):
             return f"Error: Image file not found at {image_path}"
             
